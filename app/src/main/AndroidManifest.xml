@@ -30,7 +30,6 @@
             android:name=".view.activites.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.FavDish.NoActionBar"
             >
         </activity>
     </application>
