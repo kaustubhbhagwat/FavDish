@@ -1,4 +1,4 @@
-package com.example.favdish.ui.home
+package com.example.favdish.view.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.favdish.databinding.FragmentHomeBinding
+import com.example.favdish.viewmodel.HomeViewModel
 
 class HomeFragment : Fragment() {
 
