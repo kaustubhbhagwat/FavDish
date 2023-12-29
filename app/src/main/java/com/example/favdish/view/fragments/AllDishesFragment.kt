@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.favdish.R
@@ -52,6 +53,7 @@ class AllDishesFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_all_dishes,menu)
         super.onCreateOptionsMenu(menu, inflater)
+        invalidateOptionsMenu(requireActivity())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -59,9 +61,6 @@ class AllDishesFragment : Fragment() {
            R.id.action_add_dish ->
                startActivity(Intent(requireActivity(),AddUpdateFavDishActivity::class.java))
        }
-
         return super.onOptionsItemSelected(item)
-
-
     }
 }

@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
     <item
-        android:id="@+id/action_add_dish"
+        android:id="@+id/action_settings"
         android:icon="@drawable/baseline_add_24"
-        android:title="@string/add_dish" />
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title="@string/add">
+
+        <menu>
+            <item
+                android:id="@+id/action_add_dish"
+                android:title="@string/add_dish" />
+            <item
+                android:id="@+id/action_add_dish1"
+                android:title="@string/add_dish" />
+            <item
+                android:id="@+id/action_add_dish12"
+                android:title="@string/add_dish" />
+            <item
+                android:id="@+id/action_add_dish2"
+                android:title="@string/add_dish" />
+        </menu>
+    </item>
 </menu>
