@@ -15,6 +15,7 @@ import android.provider.Settings
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.favdish.R
 import com.example.favdish.databinding.ActivityAddUpdateFavDishBinding
 import com.example.favdish.databinding.DialogCustomImageSelectionBinding
@@ -64,34 +65,38 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
 
         // GALLERY
         binding.tvGallery.setOnClickListener {
-            Dexter.withContext(this).withPermission(
-                android.Manifest.permission.READ_EXTERNAL_STORAGE,
-            ).withListener(object : PermissionListener {
+            val galleryIntent = Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            )
+            startActivityForResult(galleryIntent, GALLERY)
 
-                override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-                    Toast.makeText(
-                        this@AddUpdateFavDishActivity,
-                        "You have the gallery permission to select an image",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-
-                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
-                    Toast.makeText(
-                        this@AddUpdateFavDishActivity,
-                        "You don't have the gallery permission to select an image",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-
-                override fun onPermissionRationaleShouldBeShown(
-                    p0: PermissionRequest?,
-                    p1: PermissionToken?
-                ) {
-                    showRationalDialigforPermissions()
-                }
-
-            }).onSameThread().check()
+//            Dexter.withContext(this).withPermission(
+//                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+//            ).withListener(object : PermissionListener {
+//
+//                override fun onPermissionGranted(report: PermissionGrantedResponse?) {
+//                    val galleryIntent = Intent(Intent.ACTION_PICK,
+//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//                        )
+//                    startActivityForResult(galleryIntent, GALLERY)
+//                }
+//
+//                override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
+//                    Toast.makeText(
+//                        this@AddUpdateFavDishActivity,
+//                        "You don't have the gallery permission to select an image",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                }
+//
+//                override fun onPermissionRationaleShouldBeShown(
+//                    p0: PermissionRequest?,
+//                    p1: PermissionToken?
+//                ) {
+//                    showRationalDialigforPermissions()
+//                }
+//
+//            }).onSameThread().check()
             dialog.dismiss()
         }
 
@@ -152,8 +157,17 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
                 data?.let {
                     val thumbnail: Bitmap = data.extras!!.get("data") as Bitmap
                     binding.ivDishImage.setImageBitmap(thumbnail)
+                    binding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.baseline_edit_24))
+                }
+            }else if (requestCode == GALLERY){
+                data?.let {
+                    val selectedPhototUri = data.data
+                    binding.ivDishImage.setImageURI(selectedPhototUri)
+                    binding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.baseline_edit_24))
                 }
             }
+        }else if(resultCode == Activity.RESULT_CANCELED){
+            Toast.makeText(this@AddUpdateFavDishActivity,"Cancelled",Toast.LENGTH_LONG).show()
         }
     }
 
