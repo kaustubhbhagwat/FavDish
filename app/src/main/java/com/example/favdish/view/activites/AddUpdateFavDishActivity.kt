@@ -75,15 +75,31 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
                 }
 
             }).onSameThread().check()
-
-            Toast.makeText(this, "Camera clicked", Toast.LENGTH_LONG).show()
             dialog.dismiss()
-
         }
 
         binding.tvGallery.setOnClickListener {
-            Toast.makeText(this, "Gallery clicked", Toast.LENGTH_LONG).show()
+            Dexter.withContext(this).withPermissions(
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA
+            ).withListener(object : MultiplePermissionsListener{
+                override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                    if(report!!.areAllPermissionsGranted()){
+                        Toast.makeText(this@AddUpdateFavDishActivity,"All have Gallery permissions!! All good to go",Toast.LENGTH_LONG).show()
+                    }
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permissions: MutableList<PermissionRequest>?,
+                    token: PermissionToken?
+                ) {
+                    showRationalDialigforPermissions()
+                }
+
+            }).onSameThread().check()
             dialog.dismiss()
+
 
 
         }
