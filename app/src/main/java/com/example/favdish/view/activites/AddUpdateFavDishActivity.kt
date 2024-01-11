@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
@@ -48,6 +49,9 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
     private lateinit var binding: ActivityAddUpdateFavDishBinding
     private var imagePath: String = ""
 
+    private lateinit var mCustomImageSelectionDialog: Dialog
+    private lateinit var mCustomListDialog: Dialog
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +63,7 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
         binding.etCookingTime.setOnClickListener(this)
         binding.etDirectionToCook.setOnClickListener(this)
         binding.etType.setOnClickListener(this)
+        binding.btnAddDish.setOnClickListener(this)
     }
 
     private fun setUpToolBar() {
@@ -73,21 +78,127 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
 
         if (v != null) {
             when (v.id) {
-                R.id.iv_add_dish_image -> customImageSelectionDialog()
-                R.id.et_type -> customItemsDialog("Type", Constants.dishTypes(), Constants.DISH_TYPE)
-                R.id.et_category -> customItemsDialog("Category", Constants.dishCategories(), Constants.DISH_CATEGORY)
-                R.id.et_cooking_time -> customItemsDialog("Cooking Time", Constants.dishCookingTime(), Constants.DISH_COOKING)
-                R.id.iv_add_dish_image -> customImageSelectionDialog()
+                R.id.iv_add_dish_image -> {
+                    customImageSelectionDialog()
+                    return
+                }
+
+                R.id.et_type -> {
+                    customItemsDialog(
+                        "Type",
+                        Constants.dishTypes(),
+                        Constants.DISH_TYPE
+                    )
+                    return
+                }
+
+                R.id.et_category -> {
+                    customItemsDialog(
+                        "Category",
+                        Constants.dishCategories(),
+                        Constants.DISH_CATEGORY
+                    )
+                    return
+                }
+
+                R.id.et_cooking_time -> {
+
+                    customItemsDialog(
+                        "Cooking Time",
+                        Constants.dishCookingTime(),
+                        Constants.DISH_COOKING
+                    )
+                    return
+                }
+
+                R.id.btn_add_dish -> {
+                    val title = binding.etTitle.text.toString().trim { it <= ' ' }
+                    val type = binding.etType.text.toString().trim { it <= ' ' }
+                    val category = binding.etCategory.text.toString().trim { it <= ' ' }
+                    val ingredients = binding.etIngredients.text.toString().trim { it <= ' ' }
+                    val cookingTimeInMins = binding.etCookingTime.text.toString().trim { it <= ' ' }
+                    val cookingDirections =
+                        binding.etDirectionToCook.text.toString().trim { it <= ' ' }
+
+                    when {
+                        TextUtils.isEmpty(imagePath) -> {
+                            Toast.makeText(
+                                this@AddUpdateFavDishActivity,
+                                "Image not found",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        TextUtils.isEmpty(title) -> {
+                            Toast.makeText(
+                                this@AddUpdateFavDishActivity,
+                                "Title cannot be empty",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        TextUtils.isEmpty(type) -> {
+                            Toast.makeText(
+                                this@AddUpdateFavDishActivity,
+                                "Type cannot be empty",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        TextUtils.isEmpty(category) -> {
+                            Toast.makeText(
+                                this@AddUpdateFavDishActivity,
+                                "Category cannot be empty",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        TextUtils.isEmpty(ingredients) -> {
+                            Toast.makeText(
+                                this@AddUpdateFavDishActivity,
+                                "Ingredients cannot be empty",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        TextUtils.isEmpty(cookingTimeInMins) -> {
+                            Toast.makeText(
+                                this@AddUpdateFavDishActivity,
+                                "CookingTimeInMins cannot be empty",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        TextUtils.isEmpty(cookingDirections) -> {
+                            Toast.makeText(
+                                this@AddUpdateFavDishActivity,
+                                "CookingDirections cannot be empty",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        else -> {
+
+                            Toast.makeText(
+                                this@AddUpdateFavDishActivity,
+                                "All entries are valid",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                    return
+                }
+
                 R.id.iv_add_dish_image -> customImageSelectionDialog()
             }
         }
     }
 
     private fun customImageSelectionDialog() {
-        val dialog = Dialog(this)
+        mCustomImageSelectionDialog = Dialog(this)
         val binding: DialogCustomImageSelectionBinding =
             DialogCustomImageSelectionBinding.inflate(layoutInflater)
-        dialog.setContentView(binding.root)
+        mCustomImageSelectionDialog.setContentView(binding.root)
 
         // GALLERY
         binding.tvGallery.setOnClickListener {
@@ -124,7 +235,7 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
 //                }
 //
 //            }).onSameThread().check()
-            dialog.dismiss()
+            mCustomImageSelectionDialog.dismiss()
         }
 
         // CAMERA
@@ -149,11 +260,11 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
                 }
 
             }).onSameThread().check()
-            dialog.dismiss()
+            mCustomImageSelectionDialog.dismiss()
 
 
         }
-        dialog.show()
+        mCustomImageSelectionDialog.show()
     }
 
     private fun showRationalDialigforPermissions() {
@@ -240,7 +351,8 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
                                 dataSource: DataSource,
                                 isFirstResource: Boolean
                             ): Boolean {
-                                val bitmap:Bitmap = resource.toBitmap()
+                                val bitmap: Bitmap = resource.toBitmap()
+                                imagePath = saveImageToInternalStorage(bitmap)
                                 Log.i("ImagePath", imagePath)
                                 return false
                             }
@@ -261,17 +373,38 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
         }
     }
 
-    private fun customItemsDialog(title: String, itemList: List<String>, selection: String){
-        val customListDialog = Dialog(this)
+    private fun customItemsDialog(title: String, itemList: List<String>, selection: String) {
+        mCustomListDialog = Dialog(this)
         val binding: DialogCustomListBinding = DialogCustomListBinding.inflate(layoutInflater)
-        customListDialog.setContentView(binding.root)
+        mCustomListDialog.setContentView(binding.root)
         binding.tvTitle.text = title
         binding.rvList.layoutManager = LinearLayoutManager(this)
 
-        val adapter = ListItemAdapter(this,itemList,selection)
+        val adapter = ListItemAdapter(this, itemList, selection)
         binding.rvList.adapter = adapter
-        customListDialog.show()
+        mCustomListDialog.show()
+    }
 
+    fun selectedListItem(item: String, selection: String) {
+        when (selection) {
+            Constants.DISH_TYPE -> {
+                mCustomListDialog.dismiss()
+                binding.etType.setText(item)
+                return
+            }
+
+            Constants.DISH_CATEGORY -> {
+                mCustomListDialog.dismiss()
+                binding.etCategory.setText(item)
+                return
+            }
+
+            Constants.DISH_COOKING -> {
+                mCustomListDialog.dismiss()
+                binding.etCookingTime.setText(item)
+                return
+            }
+        }
 
     }
 
