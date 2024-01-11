@@ -5,17 +5,28 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.favdish.R
 import com.example.favdish.databinding.ActivityAddUpdateFavDishBinding
 import com.example.favdish.databinding.DialogCustomImageSelectionBinding
@@ -27,9 +38,16 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.karumi.dexter.listener.single.PermissionListener
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.util.UUID
 
 class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
     private lateinit var binding: ActivityAddUpdateFavDishBinding
+    private var imagePath: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +83,8 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
 
         // GALLERY
         binding.tvGallery.setOnClickListener {
-            val galleryIntent = Intent(Intent.ACTION_PICK,
+            val galleryIntent = Intent(
+                Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             )
             startActivityForResult(galleryIntent, GALLERY)
@@ -149,6 +168,21 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
 
     }
 
+    private fun saveImageToInternalStorage(bitmap: Bitmap): String {
+        val wrapper = ContextWrapper(applicationContext)
+        var file = wrapper.getDir(IMAGE_DIRECTORY, Context.MODE_PRIVATE)
+        file = File(file, "${UUID.randomUUID()}.jpg")
+        try {
+            val stream: OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            stream.flush()
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return file.absolutePath
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -156,24 +190,74 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
             if (requestCode == CAMERA) {
                 data?.let {
                     val thumbnail: Bitmap = data.extras!!.get("data") as Bitmap
-                    binding.ivDishImage.setImageBitmap(thumbnail)
-                    binding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.baseline_edit_24))
+//                    binding.ivDishImage.setImageBitmap(thumbnail)
+                    binding.ivAddDishImage.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.baseline_edit_24
+                        )
+                    )
+                    Glide.with(this@AddUpdateFavDishActivity)
+                        .load(thumbnail)
+                        .centerCrop()
+                        .into(binding.ivDishImage)
+
+                    imagePath = saveImageToInternalStorage(thumbnail)
+                    Log.i("ImagePath", imagePath)
                 }
-            }else if (requestCode == GALLERY){
+            } else if (requestCode == GALLERY) {
                 data?.let {
                     val selectedPhototUri = data.data
-                    binding.ivDishImage.setImageURI(selectedPhototUri)
-                    binding.ivAddDishImage.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.baseline_edit_24))
+//                    binding.ivDishImage.setImageURI(selectedPhototUri)
+
+                    Glide.with(this@AddUpdateFavDishActivity)
+                        .load(selectedPhototUri)
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                Log.e("Error Image", "ERROR loading IMAGE")
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                resource: Drawable,
+                                model: Any,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                val bitmap:Bitmap = resource.toBitmap()
+                                Log.i("ImagePath", imagePath)
+                                return false
+                            }
+                        })
+                        .into(binding.ivDishImage)
+
+                    // Replace the add icon with edit icon once the image is selected.
+                    binding.ivAddDishImage.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.baseline_edit_24
+                        )
+                    )
                 }
             }
-        }else if(resultCode == Activity.RESULT_CANCELED){
-            Toast.makeText(this@AddUpdateFavDishActivity,"Cancelled",Toast.LENGTH_LONG).show()
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            Toast.makeText(this@AddUpdateFavDishActivity, "Cancelled", Toast.LENGTH_LONG).show()
         }
     }
 
     companion object {
         const val CAMERA = 1
         const val GALLERY = 2
+
+        private const val IMAGE_DIRECTORY = "FavDishImages"
     }
 }
 
