@@ -1,6 +1,5 @@
 package com.example.favdish.view.activites
 
-import android.Manifest.permission.CAMERA
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -21,6 +20,7 @@ import android.view.View.OnClickListener
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -28,18 +28,17 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.favdish.R
+import com.example.favdish.utils.Constants
 import com.example.favdish.databinding.ActivityAddUpdateFavDishBinding
 import com.example.favdish.databinding.DialogCustomImageSelectionBinding
+import com.example.favdish.databinding.DialogCustomListBinding
+import com.example.favdish.view.adapters.ListItemAdapter
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionDeniedResponse
-import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.karumi.dexter.listener.single.PermissionListener
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
@@ -56,6 +55,10 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
         setContentView(binding.root)
         setUpToolBar()
         binding.ivAddDishImage.setOnClickListener(this)
+        binding.etCategory.setOnClickListener(this)
+        binding.etCookingTime.setOnClickListener(this)
+        binding.etDirectionToCook.setOnClickListener(this)
+        binding.etType.setOnClickListener(this)
     }
 
     private fun setUpToolBar() {
@@ -70,6 +73,11 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
 
         if (v != null) {
             when (v.id) {
+                R.id.iv_add_dish_image -> customImageSelectionDialog()
+                R.id.et_type -> customItemsDialog("Type", Constants.dishTypes(), Constants.DISH_TYPE)
+                R.id.et_category -> customItemsDialog("Category", Constants.dishCategories(), Constants.DISH_CATEGORY)
+                R.id.et_cooking_time -> customItemsDialog("Cooking Time", Constants.dishCookingTime(), Constants.DISH_COOKING)
+                R.id.iv_add_dish_image -> customImageSelectionDialog()
                 R.id.iv_add_dish_image -> customImageSelectionDialog()
             }
         }
@@ -251,6 +259,20 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
         } else if (resultCode == Activity.RESULT_CANCELED) {
             Toast.makeText(this@AddUpdateFavDishActivity, "Cancelled", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun customItemsDialog(title: String, itemList: List<String>, selection: String){
+        val customListDialog = Dialog(this)
+        val binding: DialogCustomListBinding = DialogCustomListBinding.inflate(layoutInflater)
+        customListDialog.setContentView(binding.root)
+        binding.tvTitle.text = title
+        binding.rvList.layoutManager = LinearLayoutManager(this)
+
+        val adapter = ListItemAdapter(this,itemList,selection)
+        binding.rvList.adapter = adapter
+        customListDialog.show()
+
+
     }
 
     companion object {

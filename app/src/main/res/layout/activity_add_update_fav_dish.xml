@@ -90,7 +90,7 @@
                 android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_16sdp"
                 android:layout_marginEnd="@dimen/_16sdp"
-                android:hint="@string/lbl_title"
+                android:hint="@string/lbl_type"
                 app:hintTextColor="@color/blue_grey_700"
                 app:layout_constraintTop_toBottomOf="@+id/til_title">
 
