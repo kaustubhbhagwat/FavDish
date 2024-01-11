@@ -18,6 +18,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -64,6 +65,9 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
         binding.etDirectionToCook.setOnClickListener(this)
         binding.etType.setOnClickListener(this)
         binding.btnAddDish.setOnClickListener(this)
+
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
     }
 
     private fun setUpToolBar() {
