@@ -9,7 +9,8 @@ package com.example.favdish.model.database
     
     @Database(entities = [FavDish::class], version = 1)
     abstract class FavDishRoomDatabase : RoomDatabase() {
-    
+
+        abstract fun favDishDao():FavDishDao
         companion object {
             @Volatile
             private var INSTANCE: FavDishRoomDatabase? = null
