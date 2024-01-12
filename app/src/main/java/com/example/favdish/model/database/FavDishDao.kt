@@ -8,7 +8,5 @@ import com.example.favdish.model.entities.FavDish
 interface FavDishDao {
 
     @Insert
-    suspend fun insertFavDishDetails(favDish: FavDish){
-    }
-
+    suspend fun insertFavDishDetails(favDish: FavDish)
 }

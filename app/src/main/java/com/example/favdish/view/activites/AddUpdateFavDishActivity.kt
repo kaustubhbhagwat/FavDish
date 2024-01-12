@@ -20,6 +20,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,11 +31,15 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.favdish.R
+import com.example.favdish.appliction.FavDishApplication
 import com.example.favdish.utils.Constants
 import com.example.favdish.databinding.ActivityAddUpdateFavDishBinding
 import com.example.favdish.databinding.DialogCustomImageSelectionBinding
 import com.example.favdish.databinding.DialogCustomListBinding
+import com.example.favdish.model.entities.FavDish
 import com.example.favdish.view.adapters.ListItemAdapter
+import com.example.favdish.viewmodel.FavDishViewModel
+import com.example.favdish.viewmodel.FavDishViewModelFactory
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -53,6 +58,9 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
     private lateinit var mCustomImageSelectionDialog: Dialog
     private lateinit var mCustomListDialog: Dialog
 
+    private val favDishViewModel: FavDishViewModel by viewModels {
+        FavDishViewModelFactory((application as FavDishApplication).repository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +131,7 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
                     val cookingTimeInMins = binding.etCookingTime.text.toString().trim { it <= ' ' }
                     val cookingDirections =
                         binding.etDirectionToCook.text.toString().trim { it <= ' ' }
+                    binding.etDirectionToCook.text.toString().trim { it <= ' ' }
 
                     when {
                         TextUtils.isEmpty(imagePath) -> {
@@ -182,15 +191,28 @@ class AddUpdateFavDishActivity : AppCompatActivity(), OnClickListener {
                         }
 
                         else -> {
+                            val favDishDetails: FavDish = FavDish(
+                                imagePath,
+                                Constants.DISH_IMAGE_SOURCE_LOCAL,
+                                title,
+                                type,
+                                category,
+                                ingredients,
+                                cookingTimeInMins,
+                                cookingDirections,
+                                false
+                            )
 
+                            favDishViewModel.insert(favDishDetails)
                             Toast.makeText(
                                 this@AddUpdateFavDishActivity,
-                                "All entries are valid",
+                                "Successfully added your fav dish details",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            Log.i("Insertion", "Success")
+                            finish()
                         }
                     }
-                    return
                 }
 
                 R.id.iv_add_dish_image -> customImageSelectionDialog()
