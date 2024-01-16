@@ -2,31 +2,31 @@ package com.example.favdish.view.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
 import android.widget.TextView
 import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.favdish.R
 import com.example.favdish.appliction.FavDishApplication
 import com.example.favdish.databinding.FragmentAllDishesBinding
 import com.example.favdish.view.activites.AddUpdateFavDishActivity
+import com.example.favdish.view.adapters.FavDishAdapter
 import com.example.favdish.viewmodel.FavDishViewModel
 import com.example.favdish.viewmodel.FavDishViewModelFactory
 import com.example.favdish.viewmodel.HomeViewModel
 
 class AllDishesFragment : Fragment() {
 
-    private var _binding: FragmentAllDishesBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var binding: FragmentAllDishesBinding
     private val mFavDishViewModel: FavDishViewModel by viewModels {
         FavDishViewModelFactory((requireActivity().application as FavDishApplication).repository)
     }
@@ -38,13 +38,25 @@ class AllDishesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding = FragmentAllDishesBinding.inflate(layoutInflater)
+
+        binding.rvList.layoutManager = GridLayoutManager(activity, 2)
+        val favDishAdapater = FavDishAdapter(this@AllDishesFragment)
+        binding.rvList.adapter = favDishAdapater
+
+
         mFavDishViewModel.allDishesList.observe(viewLifecycleOwner){
             dishes ->
             dishes.let {
-                for(item in it){
-                    binding.textHome.text = item.title + " " + item.category
-                    Log.d("Dish Title", item.title)
-            }
+               if(it.isNotEmpty()){
+                   binding.rvList.visibility = View.VISIBLE
+                   binding.textNoDish.visibility = View.GONE
+                   favDishAdapater.dishList(it)
+               }else{
+                   binding.textNoDish.visibility = View.GONE
+                   binding.rvList.visibility = View.VISIBLE
+               }
             }
         }
     }
@@ -54,22 +66,13 @@ class AllDishesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
 
-        _binding = FragmentAllDishesBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        binding = FragmentAllDishesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
