@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.favdish.R
 import com.example.favdish.appliction.FavDishApplication
 import com.example.favdish.databinding.FragmentAllDishesBinding
+import com.example.favdish.model.entities.FavDish
 import com.example.favdish.view.activites.AddUpdateFavDishActivity
 import com.example.favdish.view.activites.MainActivity
 import com.example.favdish.view.adapters.FavDishAdapter
@@ -69,8 +70,8 @@ class AllDishesFragment : Fragment() {
             }
         })
     }
-    fun goToDishDetails(){
-        findNavController().navigate(AllDishesFragmentDirections.actionNavigationAllDishesToDishDetailsFragment())
+    fun goToDishDetails(favDish: FavDish){
+        findNavController().navigate(AllDishesFragmentDirections.actionNavigationAllDishesToDishDetailsFragment(favDish))
             (activity as MainActivity?)?.hideBottomNavView()
     }
     override fun onDestroyView() {
