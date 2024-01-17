@@ -6,11 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.favdish.R
-import com.example.favdish.databinding.FragmentFavouriteDishBinding
 
 
-class FavouriteDishFragment : Fragment() {
-    private lateinit var binding: FragmentFavouriteDishBinding
+class DishDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,9 +17,8 @@ class FavouriteDishFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentFavouriteDishBinding.inflate(layoutInflater)
-        return binding.root
+        return inflater.inflate(R.layout.fragment_dish_details, container, false)
     }
 }

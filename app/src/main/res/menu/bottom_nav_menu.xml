@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navigation_favourite_dish"
         android:icon="@drawable/ic_favorite_dish"
-        android:title="@string/title_favourite_dish" />
+        android:title="Facourite Dish" />
 
     <item
         android:id="@+id/navigation_random_dish"

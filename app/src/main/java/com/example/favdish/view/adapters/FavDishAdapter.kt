@@ -8,18 +8,13 @@ import com.bumptech.glide.Glide
 import com.example.favdish.databinding.DishItemLayoutBinding
 import com.example.favdish.databinding.ItemCustomListBinding
 import com.example.favdish.model.entities.FavDish
+import com.example.favdish.view.fragments.AllDishesFragment
 
 class FavDishAdapter (private val fragment:Fragment):
     RecyclerView.Adapter<FavDishAdapter.ViewHolder>() {
 
         private var dishes: List<FavDish> = listOf()
 
-        class ViewHolder(view: DishItemLayoutBinding): RecyclerView.ViewHolder(view.root) {
-            val ivDishImage = view.dishImage
-            val ivDishTitle = view.dishTitle
-
-
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: DishItemLayoutBinding = DishItemLayoutBinding.inflate( LayoutInflater.from(fragment.context), parent,false)
@@ -34,10 +29,22 @@ class FavDishAdapter (private val fragment:Fragment):
         val dish = dishes[position]
         Glide.with(fragment).load(dish.image).into(holder.ivDishImage)
         holder.ivDishTitle.text = dish.title
+
+        holder.itemView.setOnClickListener {
+            if(fragment is AllDishesFragment){
+                fragment.goToDishDetails()
+            }
+        }
     }
 
     fun dishList(list: List<FavDish>){
         dishes = list
         notifyDataSetChanged()
     }
+
+    class ViewHolder(view: DishItemLayoutBinding): RecyclerView.ViewHolder(view.root) {
+        val ivDishImage = view.dishImage
+        val ivDishTitle = view.dishTitle
+    }
+
 }
