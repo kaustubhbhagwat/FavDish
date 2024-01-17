@@ -35,7 +35,6 @@
             android:layout_marginTop="@dimen/_5sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ingredients"
             android:textColor="@color/blue_grey_700"
             android:textSize="@dimen/_16sdp"
             android:textStyle="normal" />
