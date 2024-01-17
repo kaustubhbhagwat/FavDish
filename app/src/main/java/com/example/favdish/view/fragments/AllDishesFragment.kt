@@ -2,6 +2,7 @@ package com.example.favdish.view.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,13 +14,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.favdish.R
 import com.example.favdish.appliction.FavDishApplication
 import com.example.favdish.databinding.FragmentAllDishesBinding
 import com.example.favdish.view.activites.AddUpdateFavDishActivity
+import com.example.favdish.view.activites.MainActivity
 import com.example.favdish.view.adapters.FavDishAdapter
 import com.example.favdish.viewmodel.FavDishViewModel
 import com.example.favdish.viewmodel.FavDishViewModelFactory
+
 
 class AllDishesFragment : Fragment() {
     private lateinit var binding: FragmentAllDishesBinding
@@ -54,9 +58,21 @@ class AllDishesFragment : Fragment() {
                }
             }
         }
+
+        binding.rvList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+//                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+//                    (activity as MainActivity?)?.hideBottomNavView()
+//                }else if(!recyclerView.canScrollVertically(-1) && newState == RecyclerView.SCROLL_STATE_IDLE){
+//                    (activity as MainActivity?)?.showBottomNavView()
+//                }
+            }
+        })
     }
     fun goToDishDetails(){
         findNavController().navigate(AllDishesFragmentDirections.actionNavigationAllDishesToDishDetailsFragment())
+            (activity as MainActivity?)?.hideBottomNavView()
     }
     override fun onDestroyView() {
         super.onDestroyView()
@@ -72,5 +88,10 @@ class AllDishesFragment : Fragment() {
                startActivity(Intent(requireActivity(),AddUpdateFavDishActivity::class.java))
        }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+            (activity as MainActivity?)?.showBottomNavView()
     }
 }

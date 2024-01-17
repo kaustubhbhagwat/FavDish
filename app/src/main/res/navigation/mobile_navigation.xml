@@ -28,6 +28,6 @@
     <fragment
         android:id="@+id/dishDetailsFragment"
         android:name="com.example.favdish.view.fragments.DishDetailsFragment"
-        android:label="fragment_dish_details"
+        android:label="@string/dish_details"
         tools:layout="@layout/fragment_dish_details" />
 </navigation>

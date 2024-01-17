@@ -29,6 +29,7 @@ class FavDishAdapter (private val fragment:Fragment):
         val dish = dishes[position]
         Glide.with(fragment).load(dish.image).into(holder.ivDishImage)
         holder.ivDishTitle.text = dish.title
+        holder.ivDishIngredients.text = dish.ingredients
 
         holder.itemView.setOnClickListener {
             if(fragment is AllDishesFragment){
@@ -45,6 +46,7 @@ class FavDishAdapter (private val fragment:Fragment):
     class ViewHolder(view: DishItemLayoutBinding): RecyclerView.ViewHolder(view.root) {
         val ivDishImage = view.dishImage
         val ivDishTitle = view.dishTitle
+        val ivDishIngredients = view.dishIngredients
     }
 
 }
