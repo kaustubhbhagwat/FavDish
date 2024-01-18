@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.drawable.toBitmap
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
@@ -15,12 +16,18 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.example.favdish.appliction.FavDishApplication
 import com.example.favdish.databinding.FragmentDishDetailsBinding
+import com.example.favdish.viewmodel.FavDishViewModel
+import com.example.favdish.viewmodel.FavDishViewModelFactory
 
 
 class DishDetailsFragment : Fragment() {
 
     lateinit var binding: FragmentDishDetailsBinding
+    private val mFavDishViewModel : FavDishViewModel by viewModels {
+        FavDishViewModelFactory(((requireActivity().application) as FavDishApplication).repository)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -75,5 +82,11 @@ class DishDetailsFragment : Fragment() {
             binding.dishDirectionsToCook.text = it.StringDishDetails.ditectionsToCook
             binding.cookingTime.text = it.StringDishDetails.cookingTime
         }
+
+        binding.favDish.setOnClickListener {
+            args.StringDishDetails.favouriteDish = !args.StringDishDetails.favouriteDish
+            mFavDishViewModel.update(args.StringDishDetails)
+        }
+
     }
 }
