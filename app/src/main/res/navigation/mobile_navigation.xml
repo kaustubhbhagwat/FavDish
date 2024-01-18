@@ -24,14 +24,18 @@
         android:id="@+id/navigation_favourite_dish"
         android:name="com.example.favdish.view.fragments.FavouriteDishFragment"
         android:label="@string/title_favourite_dish"
-        tools:layout="@layout/fragment_favourite_dish" />
+        tools:layout="@layout/fragment_favourite_dish" >
+        <action
+            android:id="@+id/action_navigation_favourite_dish_to_dishDetailsFragment"
+            app:destination="@id/dishDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/dishDetailsFragment"
         android:name="com.example.favdish.view.fragments.DishDetailsFragment"
         android:label="@string/dish_details"
         tools:layout="@layout/fragment_dish_details">
         <argument
-            android:name="@string/dish_details"
+            android:name="dishDetails"
             app:argType="com.example.favdish.model.entities.FavDish"/>
 
     </fragment>

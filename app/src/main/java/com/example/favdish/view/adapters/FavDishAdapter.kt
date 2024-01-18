@@ -6,18 +6,19 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.favdish.databinding.DishItemLayoutBinding
-import com.example.favdish.databinding.ItemCustomListBinding
 import com.example.favdish.model.entities.FavDish
 import com.example.favdish.view.fragments.AllDishesFragment
+import com.example.favdish.view.fragments.FavouriteDishFragment
 
-class FavDishAdapter (private val fragment:Fragment):
+class FavDishAdapter(private val fragment: Fragment) :
     RecyclerView.Adapter<FavDishAdapter.ViewHolder>() {
 
-        private var dishes: List<FavDish> = listOf()
+    private var dishes: List<FavDish> = listOf()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding: DishItemLayoutBinding = DishItemLayoutBinding.inflate( LayoutInflater.from(fragment.context), parent,false)
+        val binding: DishItemLayoutBinding =
+            DishItemLayoutBinding.inflate(LayoutInflater.from(fragment.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -32,18 +33,24 @@ class FavDishAdapter (private val fragment:Fragment):
         holder.ivDishIngredients.text = dish.ingredients
 
         holder.itemView.setOnClickListener {
-            if(fragment is AllDishesFragment){
-                fragment.goToDishDetails(dish)
+            when (fragment) {
+                is AllDishesFragment -> {
+                    fragment.goToDishDetails(dish)
+
+                }
+                is FavouriteDishFragment -> {
+                    fragment.goToDishDetails(dish)
+                }
             }
         }
     }
 
-    fun dishList(list: List<FavDish>){
+    fun dishList(list: List<FavDish>) {
         dishes = list
         notifyDataSetChanged()
     }
 
-    class ViewHolder(view: DishItemLayoutBinding): RecyclerView.ViewHolder(view.root) {
+    class ViewHolder(view: DishItemLayoutBinding) : RecyclerView.ViewHolder(view.root) {
         val ivDishImage = view.dishImage
         val ivDishTitle = view.dishTitle
         val ivDishIngredients = view.dishIngredients

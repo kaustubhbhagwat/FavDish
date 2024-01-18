@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_add_dish"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/ic_favorite_selected"
         android:title="@string/add_dish" />
 </menu>

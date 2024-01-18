@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.favdish.model.database.FavDishRepository
 import com.example.favdish.model.entities.FavDish
 import kotlinx.coroutines.launch
@@ -22,6 +21,9 @@ class FavDishViewModel(private val repository: FavDishRepository) : ViewModel() 
     fun update(dish: FavDish) = viewModelScope.launch {
         repository.updateFavDishData(dish)
     }
+
+    val favDishesList: LiveData<List<FavDish>> = repository.favDishesList.asLiveData()
+
 }
 
 class FavDishViewModelFactory(private val repository: FavDishRepository) : ViewModelProvider.Factory {

@@ -34,9 +34,10 @@ class MainActivity : AppCompatActivity() {
         binding.navView.setupWithNavController(mNavController)
     }
 
-    override fun onNavigateUp(): Boolean {
+    override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(mNavController, null)
     }
+
 
     fun hideBottomNavView(){
         binding.navView.clearAnimation()

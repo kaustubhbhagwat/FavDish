@@ -16,5 +16,8 @@ interface FavDishDao {
     fun getAllDishesList(): kotlinx.coroutines.flow.Flow<List<FavDish>>
 
     @Update
-    fun updateFavDishDetails(favDish: FavDish)
+    suspend fun updateFavDishDetails(favDish: FavDish)
+
+    @Query("Select * from FAV_DISH_TABLE WHERE favourite_dish = 1")
+    fun getFavDishesList() :kotlinx.coroutines.flow.Flow<List<FavDish>>
 }
