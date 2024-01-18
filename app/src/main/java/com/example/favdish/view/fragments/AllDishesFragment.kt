@@ -58,21 +58,13 @@ class AllDishesFragment : Fragment() {
                }
             }
         }
-
-        binding.rvList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-//                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                    (activity as MainActivity?)?.hideBottomNavView()
-//                }else if(!recyclerView.canScrollVertically(-1) && newState == RecyclerView.SCROLL_STATE_IDLE){
-//                    (activity as MainActivity?)?.showBottomNavView()
-//                }
-            }
-        })
     }
     fun goToDishDetails(favDish: FavDish){
         findNavController().navigate(AllDishesFragmentDirections.actionNavigationAllDishesToDishDetailsFragment(favDish))
+        if(requireActivity() is MainActivity){
             (activity as MainActivity?)?.hideBottomNavView()
+
+        }
     }
     override fun onDestroyView() {
         super.onDestroyView()
