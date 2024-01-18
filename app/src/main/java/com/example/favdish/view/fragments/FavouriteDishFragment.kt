@@ -46,7 +46,6 @@ class FavouriteDishFragment : Fragment() {
         val favDishAdapter = FavDishAdapter(this@FavouriteDishFragment)
         binding.rvFavList.adapter = favDishAdapter
 
-
         mFavDishViewModel.favDishesList.observe(viewLifecycleOwner) { dishes ->
             dishes.let {
                 if (it.isNotEmpty()) {
@@ -59,9 +58,7 @@ class FavouriteDishFragment : Fragment() {
 
     fun goToDishDetails(favDish: FavDish) {
         findNavController().navigate(
-            FavouriteDishFragmentDirections.actionNavigationFavouriteDishToDishDetailsFragment(
-                favDish
-            )
+            FavouriteDishFragmentDirections.actionNavigationFavouriteDishToDishDetailsFragment(favDish)
         )
         if (requireActivity() is MainActivity) {
             (activity as MainActivity?)?.hideBottomNavView()
