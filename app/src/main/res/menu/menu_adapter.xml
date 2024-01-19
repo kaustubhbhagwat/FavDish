@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/editDish"
+        android:icon="@drawable/baseline_add_24"
+        android:orderInCategory="100"
+        android:title="Edit"/>
+
+    <item android:id="@+id/deleteDish"
+        android:icon="@drawable/baseline_add_24"
+        android:orderInCategory="100"
+        android:title="action_delete_dish"/>
+
+</menu>

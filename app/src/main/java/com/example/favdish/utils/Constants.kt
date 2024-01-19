@@ -8,6 +8,16 @@ object Constants {
     const val DISH_IMAGE_SOURCE_LOCAL: String = "LOCAL"
     const val DISH_IMAGE_SOURCE_ONLINE: String = "ONLINE"
 
+    const val API_ENDPOINT: String = "recipes/random"
+
+    const val API_KEY: String = "apiKey"
+    const val LIMIT_LICENSE: String = "limitLicense"
+    const val TAGS: String = "tags"
+    const val NUMBER: String = "number"
+
+    const val BASE_URL: String = "number"
+
+
     fun dishTypes(): ArrayList<String>{
         val list = ArrayList<String>()
         list.add("Breakfast")
