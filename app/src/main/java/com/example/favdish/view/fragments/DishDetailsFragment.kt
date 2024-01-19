@@ -53,68 +53,68 @@ class DishDetailsFragment : Fragment() {
         val args: DishDetailsFragmentArgs by navArgs()
         args.let {
             Glide.with(this@DishDetailsFragment).load(it.dishDetails.image)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        Log.e("TAG", "Error loading image")
-                        return false
-                    }
-
-                    override fun onResourceReady(
-                        resource: Drawable,
-                        model: Any,
-                        target: Target<Drawable>?,
-                        dataSource: DataSource,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        resource.toBitmap().let { it1 ->
-                            Palette.from(it1).generate { palette ->
-                                val intColor = palette?.vibrantSwatch?.rgb ?: 0
-                                binding.dishDetailsParentLayout.setBackgroundColor(intColor)
-                            }
-                        }
-                        return false
-                    }
-
-                })
                 .into(binding.dishDetailsImageView)
+//                .listener(object : RequestListener<Drawable> {
+//                    override fun onLoadFailed(
+//                        e: GlideException?,
+//                        model: Any?,
+//                        target: Target<Drawable>,
+//                        isFirstResource: Boolean
+//                    ): Boolean {
+//                        Log.e("TAG", "Error loading image")
+//                        return false
+//                    }
+//
+//                    override fun onResourceReady(
+//                        resource: Drawable,
+//                        model: Any,
+//                        target: Target<Drawable>?,
+//                        dataSource: DataSource,
+//                        isFirstResource: Boolean
+//                    ): Boolean {
+//                        resource.toBitmap().let { it1 ->
+//                            Palette.from(it1).generate { palette ->
+//                                val intColor = palette?.vibrantSwatch?.rgb ?: 0
+//                                binding.dishDetailsParentLayout.setBackgroundColor(intColor)
+//                            }
+//                        }
+//                        return false
+//                    }
+//
+//                }
+//        )
 
             binding.dishTitle.text = it.dishDetails.title
             binding.dishType.text = it.dishDetails.type
             binding.dishIngredients.text = it.dishDetails.ingredients
             binding.dishDirectionsToCook.text = it.dishDetails.ditectionsToCook
             binding.cookingTime.text = it.dishDetails.cookingTime
-        }
-
-        if (args.dishDetails.favouriteDish) {
-            binding.favDish.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireActivity(),
-                    R.drawable.ic_favorite_selected
-                )
-            )
-            Toast.makeText(requireActivity(), "Added to favourite dish", Toast.LENGTH_SHORT).show()
-        } else {
-            binding.favDish.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireActivity(),
-                    R.drawable.ic_favorite_unselected
-                )
-            )
-            Toast.makeText(requireActivity(), "Removed from favourite dish", Toast.LENGTH_SHORT)
-                .show()
 
         }
 
         binding.favDish.setOnClickListener {
             args.dishDetails.favouriteDish = !args.dishDetails.favouriteDish
-
             lifecycleScope.launch(Dispatchers.IO) {
                 mFavDishViewModel.update(args.dishDetails)
+            }
+            if (args.dishDetails.favouriteDish) {
+                binding.favDish.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.ic_favorite_selected
+                    )
+                )
+                Toast.makeText(requireActivity(), "Added to favourite dish", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                binding.favDish.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.ic_favorite_unselected
+                    )
+                )
+                Toast.makeText(requireActivity(), "Removed from favourite dish", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

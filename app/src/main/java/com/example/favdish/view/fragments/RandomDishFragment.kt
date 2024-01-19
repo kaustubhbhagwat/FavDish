@@ -11,7 +11,6 @@ import com.example.favdish.databinding.FragmentRandomDishBinding
 import com.example.favdish.viewmodel.NotificationsViewModel
 
 class RandomDishFragment : Fragment() {
-
     private var _binding: FragmentRandomDishBinding? = null
 
     // This property is only valid between onCreateView and
@@ -23,16 +22,10 @@ class RandomDishFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
 
         _binding = FragmentRandomDishBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
         return root
     }
 

@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/_10sdp"
     app:cardCornerRadius="@dimen/_5sdp"
     app:cardElevation="@dimen/_5sdp"
-    android:paddingBottom="@dimen/_10sdp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -14,13 +14,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/dish_image"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_120sdp"
-            android:contentDescription="@string/image_content_desc"
-            android:scaleType="fitXY"
-            tools:src="@mipmap/ic_launcher" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/dish_image"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_120sdp"
+                android:contentDescription="@string/image_content_desc"
+                android:scaleType="fitXY"
+                tools:src="@mipmap/ic_launcher" />
+
+            <ImageButton
+                android:id="@+id/more"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_gravity="top|end"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="fitXY"
+                android:visibility="gone"
+                android:src="@drawable/baseline_more_vert_24">
+
+            </ImageButton>
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/dish_title"
@@ -33,11 +51,11 @@
 
         <TextView
             android:id="@+id/dish_ingredients"
-            android:layout_marginTop="@dimen/_5sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
             android:textColor="@color/blue_grey_700"
-            android:textSize="@dimen/_16sdp"
+            android:textSize="@dimen/_12sdp"
             android:textStyle="normal" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

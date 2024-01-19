@@ -25,4 +25,6 @@
     <string name="dish_details_title">Dish Title:</string>
     <string name="ingredients">Ingredients:</string>
     <string name="cooking_time">Cooking Time:</string>
+    <string name="action_edit_dish">Edit Dish</string>
+    <string name="action_delete_dish">Delete Dish</string>
 </resources>
