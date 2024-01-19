@@ -3,12 +3,10 @@ package com.example.favdish.model.entities
 //    https://api.spoonacular.com/recipes/random?apiKey=f5e06fb150a345afb5172a09809cd3c9
 
 object RandomDish {
-
-    data class Recipe(
-        val recipes: List<RecipeX>
+    data class Recipes(
+        val recipes: List<Recipe>
     )
-
-    data class RecipeX(
+    data class Recipe(
         val aggregateLikes: Int,
         val analyzedInstructions: List<AnalyzedInstruction>,
         val cheap: Boolean,
