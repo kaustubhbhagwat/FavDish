@@ -40,25 +40,25 @@ class RandomDishFragment : Fragment() {
 
     private fun randomDishViewModelObserver() {
         mRandomDishViewModel.randomDishResponse.observe(
-            viewLifecycleOwner,
-            { randomDishResponse ->
-                randomDishResponse?.let {
-                    Log.i("Random Dish", "$randomDishResponse")
-                }
-            })
+            viewLifecycleOwner
+        ) { randomDishResponse ->
+            randomDishResponse?.let {
+                Log.i("Random Dish", "$randomDishResponse")
+            }
+        }
         mRandomDishViewModel.randomDishLoadingError.observe(
-            viewLifecycleOwner,
-            { dataError ->
-                dataError.let {
-                    Log.i("Data Error", "$dataError")
-                }
-            })
+            viewLifecycleOwner
+        ) { dataError ->
+            dataError.let {
+                Log.i("Data Error", "$dataError")
+            }
+        }
 
-        mRandomDishViewModel.loadRandomDish.observe(viewLifecycleOwner, { loadRandomDish ->
+        mRandomDishViewModel.loadRandomDish.observe(viewLifecycleOwner) { loadRandomDish ->
             loadRandomDish.let {
                 Log.i("Load Random DIsh", "$loadRandomDish")
             }
-        })
+        }
     }
 
     override fun onDestroyView() {
