@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.favdish.databinding.FragmentRandomDishBinding
+import com.example.favdish.model.entities.RandomDish
 import com.example.favdish.viewmodel.RandomDishViewModel
 
 class RandomDishFragment : Fragment() {
@@ -43,7 +44,7 @@ class RandomDishFragment : Fragment() {
             viewLifecycleOwner
         ) { randomDishResponse ->
             randomDishResponse?.let {
-                Log.i("Random Dish", "$randomDishResponse")
+                setResponseToUI(randomDishResponse.recipes[0])
             }
         }
         mRandomDishViewModel.randomDishLoadingError.observe(
@@ -59,6 +60,31 @@ class RandomDishFragment : Fragment() {
                 Log.i("Load Random DIsh", "$loadRandomDish")
             }
         }
+    }
+
+    private fun setResponseToUI(recipe: RandomDish.Recipe){
+        var ingredients = ""
+
+        Glide.with(requireActivity())
+            .load(recipe.image)
+            .into(binding.dishDetailsImageView)
+
+        for(value in recipe.extendedIngredients){
+
+            if(ingredients.isEmpty()){
+                ingredients = value.original
+            }else{
+                ingredients = ingredients +",\n" + value.original
+            }
+        }
+
+
+        binding.dishTitle.text = recipe.title
+        binding.dishType.text = recipe.dishTypes[0]
+        binding.dishDirectionsToCook.text = recipe.instructions
+        binding.dishIngredients.text = ingredients
+
+        binding.cookingTime.text = recipe.readyInMinutes.toString()
     }
 
     override fun onDestroyView() {
