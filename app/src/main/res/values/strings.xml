@@ -29,4 +29,5 @@
     <string name="action_delete_dish">Delete Dish</string>
     <string name="msg_dish_already_added">You have already added dish to your favourites</string>
     <string name="please_wait">Please Wait</string>
+    <string name="share">Share</string>
 </resources>
