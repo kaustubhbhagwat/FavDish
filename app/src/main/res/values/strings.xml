@@ -27,4 +27,5 @@
     <string name="cooking_time">Cooking Time:</string>
     <string name="action_edit_dish">Edit Dish</string>
     <string name="action_delete_dish">Delete Dish</string>
+    <string name="msg_dish_already_added">You have already added dish to your favourites</string>
 </resources>

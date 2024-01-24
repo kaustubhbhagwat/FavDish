@@ -48,6 +48,10 @@ class RandomDishFragment : Fragment() {
         mRandomDishViewModel = ViewModelProvider(this)[RandomDishViewModel::class.java]
         mRandomDishViewModel.getRandomDishFromApi()
         randomDishViewModelObserver()
+
+        binding.swipeRefreshLayoutRandomDish.setOnRefreshListener {
+            mRandomDishViewModel.getRandomDishFromApi()
+        }
     }
 
     private fun randomDishViewModelObserver() {
