@@ -1,5 +1,6 @@
 package com.example.favdish.view.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -27,6 +28,9 @@ class RandomDishFragment : Fragment() {
 
     private lateinit var mRandomDishViewModel: RandomDishViewModel
 
+    private var mProgressDialog: Dialog? = null
+
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -42,6 +46,7 @@ class RandomDishFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mProgressDialog = Dialog(requireActivity())
         binding.dishDetailsParentLayout.visibility = View.GONE
         mRandomDishViewModel = ViewModelProvider(this)[RandomDishViewModel::class.java]
         mRandomDishViewModel.getRandomDishFromApi()
@@ -59,7 +64,7 @@ class RandomDishFragment : Fragment() {
         ) { randomDishResponse ->
             randomDishResponse?.let {
                 Log.i("Data Success", "$randomDishResponse")
-                if(binding.swipeRefreshLayoutRandomDish.isRefreshing){
+                if (binding.swipeRefreshLayoutRandomDish.isRefreshing) {
                     binding.swipeRefreshLayoutRandomDish.isRefreshing = false
                 }
                 setResponseToUI(randomDishResponse.recipes[0])
@@ -69,7 +74,7 @@ class RandomDishFragment : Fragment() {
             viewLifecycleOwner
         ) { dataError ->
             dataError.let {
-                if(binding.swipeRefreshLayoutRandomDish.isRefreshing){
+                if (binding.swipeRefreshLayoutRandomDish.isRefreshing) {
                     binding.swipeRefreshLayoutRandomDish.isRefreshing = false
                 }
                 Log.i("Data Error", "$dataError")
@@ -78,7 +83,12 @@ class RandomDishFragment : Fragment() {
 
         mRandomDishViewModel.loadRandomDish.observe(viewLifecycleOwner) { loadRandomDish ->
             loadRandomDish.let {
-                Log.i("Load Random DIsh", "$loadRandomDish")
+                if (loadRandomDish && !binding.swipeRefreshLayoutRandomDish.isRefreshing) {
+                    showCustomProgressDialog()
+                } else {
+                    hideProgressDialog()
+                }
+                Log.i("Load Random Dish", "$loadRandomDish")
             }
         }
     }
@@ -147,6 +157,17 @@ class RandomDishFragment : Fragment() {
                     .show()
             }
         }
+    }
+
+    private fun showCustomProgressDialog() {
+        mProgressDialog.let {
+            it?.setContentView(R.layout.dialog_custom_progress)
+            it?.show()
+        }
+    }
+
+    private fun hideProgressDialog() {
+        mProgressDialog?.dismiss()
     }
 
     override fun onDestroyView() {
