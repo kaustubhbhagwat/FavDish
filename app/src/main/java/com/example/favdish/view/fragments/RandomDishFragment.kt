@@ -36,9 +36,7 @@ class RandomDishFragment : Fragment() {
     ): View {
 
         _binding = FragmentRandomDishBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        return root
+        return binding.root
     }
 
 
@@ -55,10 +53,15 @@ class RandomDishFragment : Fragment() {
     }
 
     private fun randomDishViewModelObserver() {
+
         mRandomDishViewModel.randomDishResponse.observe(
             viewLifecycleOwner
         ) { randomDishResponse ->
             randomDishResponse?.let {
+                Log.i("Data Success", "$randomDishResponse")
+                if(binding.swipeRefreshLayoutRandomDish.isRefreshing){
+                    binding.swipeRefreshLayoutRandomDish.isRefreshing = false
+                }
                 setResponseToUI(randomDishResponse.recipes[0])
             }
         }
@@ -66,6 +69,9 @@ class RandomDishFragment : Fragment() {
             viewLifecycleOwner
         ) { dataError ->
             dataError.let {
+                if(binding.swipeRefreshLayoutRandomDish.isRefreshing){
+                    binding.swipeRefreshLayoutRandomDish.isRefreshing = false
+                }
                 Log.i("Data Error", "$dataError")
             }
         }
@@ -98,29 +104,48 @@ class RandomDishFragment : Fragment() {
         binding.dishIngredients.text = ingredients
         binding.cookingTime.text = recipe.readyInMinutes.toString()
         binding.dishDetailsParentLayout.visibility = View.VISIBLE
+
+        binding.dishDetailsImageView.setImageDrawable(
+            ContextCompat.getDrawable(
+                requireActivity(),
+                R.drawable.ic_favorite_unselected
+            )
+        )
+        var addedToFavourites = false
         binding.dishDetailsImageView.setOnClickListener {
-            val randomFavDish = FavDish(
-                recipe.image,
-                Constants.DISH_IMAGE_SOURCE_ONLINE,
-                recipe.title,
-                recipe.dishTypes[0],
-                "OTHER",
-                ingredients,
-                recipe.readyInMinutes.toString(),
-                recipe.instructions,
-                true
-            )
-            val mFavDishViewModel: FavDishViewModel by viewModels {
-                FavDishViewModelFactory((requireActivity().application as FavDishApplication).repository)
-            }
-            mFavDishViewModel.insert(randomFavDish)
-            binding.favDish.setImageDrawable(
-                ContextCompat.getDrawable(
+            if (addedToFavourites) {
+                Toast.makeText(
                     requireActivity(),
-                    R.drawable.ic_favorite_selected
+                    R.string.msg_dish_already_added,
+                    Toast.LENGTH_SHORT
                 )
-            )
-            Toast.makeText(requireActivity(),"Dish Inserted successfully",Toast.LENGTH_SHORT).show()
+                    .show()
+            } else {
+                val randomFavDish = FavDish(
+                    recipe.image,
+                    Constants.DISH_IMAGE_SOURCE_ONLINE,
+                    recipe.title,
+                    recipe.dishTypes[0],
+                    "OTHER",
+                    ingredients,
+                    recipe.readyInMinutes.toString(),
+                    recipe.instructions,
+                    true
+                )
+                val mFavDishViewModel: FavDishViewModel by viewModels {
+                    FavDishViewModelFactory((requireActivity().application as FavDishApplication).repository)
+                }
+                mFavDishViewModel.insert(randomFavDish)
+                addedToFavourites = true
+                binding.favDish.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.ic_favorite_selected
+                    )
+                )
+                Toast.makeText(requireActivity(), "Dish Inserted successfully", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 
