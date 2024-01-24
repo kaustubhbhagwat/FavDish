@@ -6,7 +6,7 @@ object Constants {
     const val DISH_COOKING: String = "DishCooking"
 
     const val DISH_IMAGE_SOURCE_LOCAL: String = "LOCAL"
-//    const val DISH_IMAGE_SOURCE_ONLINE: String = "ONLINE"
+    const val DISH_IMAGE_SOURCE_ONLINE: String = "ONLINE"
 
     const val API_ENDPOINT: String = "recipes/random"
 

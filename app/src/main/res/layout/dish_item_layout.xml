@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/_10sdp"
     app:cardCornerRadius="@dimen/_5sdp"
     app:cardElevation="@dimen/_5sdp"
     app:cardUseCompatPadding="true">
@@ -45,6 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/dish_title"
+            android:maxLines="1"
             android:textColor="@color/grey_900"
             android:textSize="@dimen/_16sdp"
             android:textStyle="bold" />
@@ -54,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_2sdp"
+            android:maxLines="2"
             android:textColor="@color/blue_grey_700"
             android:textSize="@dimen/_12sdp"
             android:textStyle="normal" />
