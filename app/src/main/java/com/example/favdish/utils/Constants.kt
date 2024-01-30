@@ -22,6 +22,11 @@ object Constants {
     const val TAGS_VALUE: String = "vegetarian"
     const val NUMBER_VALUE: Int = 1
 
+    const val NOTIFICATION_ID: String = "FavDish_notificationId"
+    const val NOTIFICATION_NAME: String = "FavDish"
+    const val NOTIFICATION_CHANNEL: String = "FavDish_channel_1"
+
+
 
 
 

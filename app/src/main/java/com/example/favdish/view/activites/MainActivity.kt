@@ -18,6 +18,7 @@ import androidx.work.WorkManager
 import com.example.favdish.R
 import com.example.favdish.databinding.ActivityMainBinding
 import com.example.favdish.model.notification.NotificationWorker
+import com.example.favdish.utils.Constants
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -43,6 +44,10 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(mNavController, appBarConfiguration)
         binding.navView.setupWithNavController(mNavController)
+        if(intent.hasExtra(Constants.NOTIFICATION_ID)){
+            val notificationId = intent.getIntExtra(Constants.NOTIFICATION_ID,0)
+            binding.navView.selectedItemId = R.id.navigation_random_dish
+        }
         startWork()
     }
 
@@ -58,7 +63,6 @@ class MainActivity : AppCompatActivity() {
             .build()
 
     private fun startWork() {
-
         WorkManager.getInstance(this)
             .enqueueUniquePeriodicWork(
                 "FavDishNotificationWork",
@@ -83,6 +87,5 @@ class MainActivity : AppCompatActivity() {
         binding.navView.clearAnimation()
         binding.navView.animate().translationY(0f).duration = 300
         binding.navView.visibility = View.VISIBLE
-
     }
 }
