@@ -88,4 +88,6 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
 }
