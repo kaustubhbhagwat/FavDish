@@ -12,6 +12,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import com.example.favdish.R
 import com.example.favdish.databinding.ActivitySplashBinding
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +34,7 @@ class SplashActivity : AppCompatActivity() {
 
         val splashAnimation = AnimationUtils.loadAnimation(this, R.anim.anim_splash)
         splashBinding.tvAppName.animation = splashAnimation
-        splashAnimation.setAnimationListener(object: Animation.AnimationListener {
+        splashAnimation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation?) {
                 //
             }
@@ -39,13 +42,18 @@ class SplashActivity : AppCompatActivity() {
             override fun onAnimationEnd(animation: Animation?) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                },300)
+                }, 300)
+
+                GlobalScope.launch {
+                    delay(300)
+                    finish()
+                }
+
             }
 
             override fun onAnimationRepeat(animation: Animation?) {
-                finish()
             }
-        } )
+        })
 
     }
 }
