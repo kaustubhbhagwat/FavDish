@@ -30,6 +30,8 @@ class RandomDishFragment : Fragment() {
 
     private var mProgressDialog: Dialog? = null
 
+    private var addedToFavourites: Boolean = false
+
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -58,7 +60,6 @@ class RandomDishFragment : Fragment() {
     }
 
     private fun randomDishViewModelObserver() {
-
         mRandomDishViewModel.randomDishResponse.observe(
             viewLifecycleOwner
         ) { randomDishResponse ->
@@ -68,6 +69,13 @@ class RandomDishFragment : Fragment() {
                     binding.swipeRefreshLayoutRandomDish.isRefreshing = false
                 }
                 setResponseToUI(randomDishResponse.recipes[0])
+                binding.favDish.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.ic_favorite_unselected
+                    )
+                )
+
             }
         }
         mRandomDishViewModel.randomDishLoadingError.observe(
@@ -112,7 +120,7 @@ class RandomDishFragment : Fragment() {
         binding.dishType.text = recipe.dishTypes[0]
         binding.dishDirectionsToCook.text = Html.fromHtml(recipe.instructions)
         binding.dishIngredients.text = ingredients
-        binding.cookingTime.text = recipe.readyInMinutes.toString()
+        binding.cookingTime.text = "${recipe.readyInMinutes} minutes"
         binding.dishDetailsParentLayout.visibility = View.VISIBLE
 
         binding.dishDetailsImageView.setImageDrawable(
@@ -121,15 +129,14 @@ class RandomDishFragment : Fragment() {
                 R.drawable.ic_favorite_unselected
             )
         )
-        var addedToFavourites = false
+        addedToFavourites = false
         binding.dishDetailsImageView.setOnClickListener {
             if (addedToFavourites) {
                 Toast.makeText(
                     requireActivity(),
                     R.string.msg_dish_already_added,
                     Toast.LENGTH_SHORT
-                )
-                    .show()
+                ).show()
             } else {
                 val randomFavDish = FavDish(
                     recipe.image,
@@ -165,7 +172,6 @@ class RandomDishFragment : Fragment() {
             it?.show()
         }
     }
-
     private fun hideProgressDialog() {
         mProgressDialog?.dismiss()
     }
